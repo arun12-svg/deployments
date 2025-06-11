@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: em-etl-frontend
+  namespace: brightchecks
+  labels:
+    app: em-etl-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: em-etl-frontend
+  template:
+    metadata:
+      labels:
+        app: em-etl-frontend
+    spec:
+      containers:
+      - name: em-etl-frontend
+        image: emindsguardians/em-etl-frontend:M6
+        command: ["npm","start"]
+        ports: 
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: em-etl-frontend
+  namespace: brightchecks
+spec:
+  type: NodePort
+  selector:
+    app: em-etl-frontend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30080
